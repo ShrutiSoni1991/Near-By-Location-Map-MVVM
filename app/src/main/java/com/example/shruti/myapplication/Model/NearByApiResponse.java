@@ -8,10 +8,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NearByApiResponse implements Parcelable, ClusterItem{
+public class NearByApiResponse implements Serializable, Parcelable, ClusterItem{
 
     @SerializedName("html_attributions")
     @Expose

@@ -47,7 +47,6 @@ public class SampleFragment extends Fragment {
     CircleImageView circleImageView;
     NearByApiResponse nearByApiResponse;
 
-
     public static SampleFragment newInstance(String text) {
 
         SampleFragment f = new SampleFragment();
@@ -64,9 +63,6 @@ public class SampleFragment extends Fragment {
 
         nearByApiResponse =  (NearByApiResponse)getArguments().getParcelable("Recycler");
         recyclerView = (RecyclerView)v.findViewById(R.id.recyclerView);
-
-       // recyclerDataViewModel = ViewModelProviders.of(this).get(RecyclerDataViewModel.class);
-
         circleImageView = (CircleImageView)v.findViewById(R.id.profile_image);
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +73,7 @@ public class SampleFragment extends Fragment {
                 String backStateName = mapFragment.getClass().getName();
                 transaction.replace(R.id.rlMain, mapFragment);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.addToBackStack("some text");
+                transaction.addToBackStack("Recycler");
                 transaction.commit();
             }
         });
@@ -93,18 +89,14 @@ public class SampleFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Save away the original text, so we still have it if the activity
-        // needs to be killed while paused.
-        outState.putString("my_text", sMyText);
-        outState.putInt("my_int", nMyInt);
+        outState.getParcelable("Recycler");
         Toast.makeText(getContext(), "onSaveInstanceState()", Toast.LENGTH_LONG).show();
         Log.i("onSaveInstanceState", "onSaveInstanceState()");
     }
     String sNewMyText = "";
     int nNewMyInt = 0;
     public void onRestoreInstanceState(Bundle inState){
-        sNewMyText = inState.getString("my_text");
-        nNewMyInt = inState.getInt("my_int");
+        inState.putParcelable("Recycler", nearByApiResponse);
         Toast.makeText(getContext(), "onRestoreInstanceState()", Toast.LENGTH_LONG).show();
         Log.i("onRestoreInstanceState", "onRestoreInstanceState()");
     }
@@ -115,9 +107,7 @@ public class SampleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sample_adapter = new Sample_Adapter2(getContext(),nearByApiResponse);
-//                //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(sample_adapter);
-
     }
 }

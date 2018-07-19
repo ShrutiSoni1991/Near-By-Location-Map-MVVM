@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -60,6 +61,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleAp
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
 
 
         view = inflater.inflate(R.layout.map_fragment, container, false);
@@ -134,10 +136,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleAp
                     }
                 });
 
+
                 transaction.replace(R.id.rlMain, sampleFragment).addToBackStack("Here");;
                 transaction.commit();
             }
         });
+
 
         //To check permissions above M as below it making issue and gives permission denied on samsung and other phones.
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -159,21 +163,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleAp
         return view;
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
 
-        outState.putString("my_text", sMyText);
-        outState.putInt("my_int", nMyInt);
-        Toast.makeText(getContext(), "onSaveInstanceState()", Toast.LENGTH_LONG).show();
+        outState.putSerializable("Recycler", (Serializable) nearByApiResponses);
+        super.onSaveInstanceState(outState);
     }
     public void onRestoreInstanceState(Bundle inState){
-        // restore saved values
-        sNewMyText = inState.getString("my_text");
-        nNewMyInt = inState.getInt("my_int");
-        Toast.makeText(getContext(), "onRestoreInstanceState()", Toast.LENGTH_LONG).show();
-        Log.i("onRestoreInstanceState", "onRestoreInstanceState()");
+        inState.getSerializable("Recycler");
+
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -232,11 +230,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleAp
             }
         });
     }
-
+    String savedData;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);//Make sure you have this line of code.
+        if (savedInstanceState != null) {
+            nearByApiResponses = (Observer<NearByApiResponse>) savedInstanceState.getParcelable("nearByApiResponse");
+        }
+        setHasOptionsMenu(true);
     }
     /****************** search Box code end *********************************/
 
