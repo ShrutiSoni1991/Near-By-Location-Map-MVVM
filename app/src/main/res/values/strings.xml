@@ -1,0 +1,5 @@
+<resources>
+    <string name="google_maps_API_key">AIzaSyDh1uMLQVuy6inwVBqM6R3xIojj28r_5fE</string>
+    <string name="app_name">Near By Places</string>
+    <string name="search_title">Enter Place Type Here..</string>
+</resources>
